@@ -1,0 +1,68 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+### to prevent warnings
+from warnings import filterwarnings
+filterwarnings('ignore')
+
+## Firstmost step is to load the dataframe by Pandas read function which reads the dataset from the location where is currently stored
+
+
+df=pd.read_csv('C:/Users/svmbj/Downloads/zomato.csv')
+df.head()
+
+## Finding the total length of restaurant names(excluding the duplciates names)
+
+len(df['name'].unique())
+
+## Checking the total Null values for each column in dataframe
+
+df.isna().sum()
+
+feature_na=[feature for feature in df.columns if df[feature].isnull().sum()>0]
+feature_na
+
+#% of missing values done using .format function 
+
+for feature in feature_na:
+    print('{} has {} % missing values'.format(feature,np.round(df[feature].isnull().sum()/len(df)*100,4)))
+    
+df['rate'].unique()
+
+## Removing Na values from 'rate' column rowwise
+
+df.dropna(axis='index',subset=['rate'],inplace=True)
+
+## Now checknig the value of total columns and rows in the dataframe
+
+df.shape
+
+## from rate column values , we want to remove 'x/y' rating format and keep it as x only
+
+def split(x):
+    return x.split('/')[0]
+    
+## Applied split function to 'rate' column
+
+df['rate']=df['rate'].apply(split)
+
+df['rate']
+df.head()
+
+df['rate'].unique()
+
+## We want to replace this 'New' & '-' values from rate column and assign a number for eg 0
+
+df.replace('NEW',0,inplace=True)
+df.replace('-',0,inplace=True)
+
+df['rate']=df['rate'].astype(float)
+
+df['rate'].unique()
+
+
+    
+    
+    
