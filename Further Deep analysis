@@ -1,0 +1,18 @@
+### calculate avg rating of each resturant
+
+df.groupby('name')['rate'].mean().nlargest(20).plot.bar()
+
+df_rate=df.groupby('name')['rate'].mean().to_frame()
+df_rate=df_rate.reset_index()
+df_rate.columns=['restaurant','rating']
+df_rate.head(20)
+
+df_rate.shape
+
+#### alternative is create a list in which u have all the restaurants & in another list,we have all ratings & then using zip we can create a dataframe
+
+'''restaurant=[]
+avg_rating=[]
+for key,name_df in df.groupby('name'):
+    restaurant.append(key)
+    avg_rating.append(np.mean(name_df['rate'])'''
