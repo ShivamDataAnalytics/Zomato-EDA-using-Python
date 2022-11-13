@@ -16,3 +16,76 @@ avg_rating=[]
 for key,name_df in df.groupby('name'):
     restaurant.append(key)
     avg_rating.append(np.mean(name_df['rate'])'''
+    
+    '''df_rate=pd.DataFrame(zip(restaurant,avg_rating))
+df_rate.columns=['restaurant','rating']
+df_rate.head(20)'''
+
+'''df_rate.shape'''
+
+##Rating Distribution
+
+sns.set_style(style='whitegrid')
+sns.distplot(df_rate['rating'])
+
+## ##### Almost more than 50 percent of restaurants has rating between 3 and 4. Restaurants having rating more than 4.5 are very rare.
+
+#### Which are the top restaurant chains in Bangaluru?
+
+plt.figure(figsize=(10,7))
+chains=df['name'].value_counts()[0:20]
+sns.barplot(x=chains,y=chains.index,palette='deep')
+plt.title("Most famous restaurants chains in Bangaluru")
+plt.xlabel("Number of outlets") 
+
+##### How many of the restuarants do not accept online orders?
+
+## Without using plotly
+
+x=df['online_order'].value_counts()
+labels=['accepted','not accepted']
+plt.pie(x,explode=[0.0,0.1],autopct='%1.1f%%')
+
+## using plotly 
+
+x=df['online_order'].value_counts()
+labels=['accepted','not accepted']
+
+fig = px.pie(df, values=x, names=labels,title='Pie chart')
+fig.show()
+
+#### How many types of restaurants we have?
+
+df['rest_type'].isna().sum()
+
+df['rest_type'].dropna(inplace=True)
+
+df['rest_type'].isna().sum()
+
+len(df['rest_type'].unique())
+
+plt.figure(figsize=(20,12))
+df['rest_type'].value_counts().nlargest(20).plot.bar(color='red')
+plt.gcf().autofmt_xdate()
+
+##### now using plotly
+
+trace1 = go.Bar( 
+        x = df['rest_type'].value_counts().nlargest(20).index,
+        y = df['rest_type'].value_counts().nlargest(20),
+        name= 'rest_type')
+        
+iplot([trace1])
+
+ #### At all, Banglore is known as the tech capital of India,people having busy and modern life will prefer Quick Bites.  We can observe tha Quick Bites type restaurants dominates.
+ 
+ ###### highest voted restaurant
+
+df.groupby('name')['votes'].max().nlargest(10).plot.bar()
+
+##### now using plotly to  provide interactive graphs
+
+trace1 = go.Bar( 
+        x = df.groupby('name')['votes'].max().nlargest(10).index,
+        y = df.groupby('name')['votes'].max().nlargest(10),
+        name= 'name')
